@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Financial Clarity">
+<meta name="theme-color" content="#0F1117">
+<title>Financial Clarity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0F1117;
+  --surface: #1C1F2A;
+  --surface2: #252836;
+  --border: #2E3244;
+  --accent: #6C63FF;
+  --accent-dim: rgba(108,99,255,0.15);
+  --green: #22C55E;
+  --green-dim: rgba(34,197,94,0.12);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.12);
+  --red: #EF4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --text: #F1F2F6;
+  --text2: #8B8FA8;
+  --text3: #555870;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; }
+body { overflow-x: hidden; }
+
+/* NAV */
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
+.nav-logo { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.nav-logo span { color: var(--accent); }
+.nav-user { font-size: 13px; color: var(--text2); }
+
+/* BOTTOM TAB BAR */
+.tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--surface); border-top: 1px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); }
+.tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 8px; border: none; background: none; color: var(--text3); cursor: pointer; transition: color 0.15s; font-family: 'Inter', sans-serif; }
+.tab-btn.active { color: var(--accent); }
+.tab-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tab-btn span { font-size: 10px; font-weight: 500; }
+
+/* SCREENS */
+.screen { display: none; padding: 20px 20px 100px; max-width: 480px; margin: 0 auto; }
+.screen.active { display: block; }
+
+/* SETUP SCREEN */
+.setup-hero { text-align: center; padding: 40px 0 32px; }
+.setup-hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+.setup-hero h1 span { color: var(--accent); }
+.setup-hero p { font-size: 15px; color: var(--text2); line-height: 1.6; }
+.form-section { margin-bottom: 24px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display: block; }
+.form-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 16px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; outline: none; transition: border-color 0.15s; }
+.form-input:focus { border-color: var(--accent); }
+.pill-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+.pill.selected { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.btn-primary { width: 100%; padding: 15px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity 0.15s; margin-top: 8px; }
+.btn-primary:active { opacity: 0.8; }
+
+/* CARDS */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
+.card-sm { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px; }
+
+/* HOME */
+.greeting { margin-bottom: 24px; }
+.greeting h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.greeting p { font-size: 14px; color: var(--text2); margin-top: 4px; }
+.period-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.period-label { font-size: 13px; color: var(--text2); }
+.period-nav { display: flex; align-items: center; gap: 10px; }
+.period-nav button { background: var(--surface); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.period-nav span { font-size: 14px; font-weight: 500; color: var(--text); min-width: 110px; text-align: center; }
+
+/* SUMMARY PILLS */
+.summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.summary-pill { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+.summary-pill .s-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.summary-pill .s-val { font-size: 16px; font-weight: 600; }
+.s-income { color: var(--green); }
+.s-spent { color: var(--red); }
+.s-left { color: var(--accent); }
+
+/* BUDGET BARS */
+.budget-item { margin-bottom: 12px; }
+.budget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.budget-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.budget-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.budget-amounts { font-size: 12px; color: var(--text2); }
+.bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.3s ease; }
+
+/* SECTION HEADER */
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.section-title { font-size: 16px; font-weight: 600; }
+.btn-add { background: var(--accent-dim); border: 1px solid var(--accent); color: var(--accent); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: flex-end; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius) var(--radius) 0 0; width: 100%; max-width: 480px; padding: 24px 20px 40px; }
+.modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.btn-secondary { flex: 1; padding: 13px; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-danger { flex: 1; padding: 13px; background: rgba(239,68,68,0.12); border: 1px solid var(--red); color: var(--red); border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; }
+.form-row { margin-bottom: 16px; }
+.form-row label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.form-row input, .form-row select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; outline: none; }
+.form-row input:focus, .form-row select:focus { border-color: var(--accent); }
+.form-row select option { background: var(--surface2); }
+
+/* EXPENSE LIST */
+.expense-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.expense-item:last-child { border-bottom: none; }
+.expense-left { display: flex; align-items: center; gap: 12px; }
+.expense-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: var(--surface2); flex-shrink: 0; }
+.expense-name { font-size: 14px; font-weight: 500; }
+.expense-cat { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.expense-amount { font-size: 15px; font-weight: 600; color: var(--red); }
+.expense-note { font-size: 11px; color: var(--text3); text-align: right; margin-top: 2px; }
+
+/* CHART */
+.pie-container { display: flex; align-items: center; gap: 20px; padding: 10px 0; }
+.pie-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { color: var(--text2); flex: 1; }
+.legend-pct { font-weight: 600; }
+
+/* SAVINGS */
+.savings-bar-wrap { margin: 12px 0; }
+.savings-numbers { display: flex; justify-content: space-between; font-size: 13px; color: var(--text2); margin-top: 6px; }
+.savings-big { font-size: 28px; font-weight: 700; color: var(--green); }
+
+/* RECURRING */
+.recur-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.recur-item:last-child { border-bottom: none; }
+.recur-name { font-size: 14px; font-weight: 500; }
+.recur-freq { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.recur-amount { font-size: 15px; font-weight: 600; color: var(--amber); }
+
+/* SETTINGS */
+.settings-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-size: 15px; }
+.settings-value { font-size: 14px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+
+/* INCOME ITEM */
+.income-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.income-item:last-child { border-bottom: none; }
+.income-name { font-size: 14px; font-weight: 500; }
+.income-date { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.income-amount { font-size: 15px; font-weight: 600; color: var(--green); }
+
+/* EMPTY STATE */
+.empty { text-align: center; padding: 32px 0; color: var(--text3); font-size: 14px; }
+.empty svg { width: 40px; height: 40px; stroke: var(--text3); fill: none; stroke-width: 1.5; margin: 0 auto 12px; display: block; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 500; z-index: 300; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+/* HISTORY */
+.history-month { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; cursor: pointer; }
+.history-month-header { display: flex; justify-content: space-between; align-items: center; }
+.history-month-name { font-size: 15px; font-weight: 600; }
+.history-month-total { font-size: 15px; font-weight: 600; color: var(--red); }
+.history-month-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+.color-swatch-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s; }
+.color-swatch.selected { border-color: #fff; }
+
+/* PRESUPUESTO CARDS */
+.home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.home-header h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.btn-add-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 22px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; flex-shrink: 0; }
+
+/* PERIOD BAR */
+.period-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px; }
+.period-nav-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.period-nav-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Inter', sans-serif; }
+.period-label-btn { flex: 1; background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; height: 30px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.indicators-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.indicator-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; }
+.indicator-box.clickable { cursor: pointer; }
+.indicator-box.clickable:active { background: var(--surface); }
+.ind-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.ind-val { font-size: 15px; font-weight: 700; line-height: 1; }
+.ind-sub { font-size: 9px; color: var(--text3); margin-top: 3px; }
+
+/* 2-COLUMN COMPACT GRID */
+.presup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.presup-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--green); border-radius: var(--radius); padding: 10px 10px 12px; cursor: pointer; transition: border-top-color 0.25s; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 120px; text-align: center; }
+.presup-card.state-green { border-top-color: var(--green); background: rgba(34,197,94,0.05); }
+.presup-card.state-amber { border-top-color: var(--amber); background: rgba(245,158,11,0.05); }
+.presup-card.state-red   { border-top-color: var(--red);   background: rgba(239,68,68,0.05); }
+.presup-name { font-size: 11px; font-weight: 600; color: var(--text2); line-height: 1.3; padding-top: 22px; width: 100%; }
+.presup-remaining { font-size: 20px; font-weight: 700; line-height: 1; margin-top: 4px; }
+.presup-remaining.state-green { color: var(--green); }
+.presup-remaining.state-amber { color: var(--amber); }
+.presup-remaining.state-red   { color: var(--red); }
+.presup-sub { font-size: 9px; color: var(--text2); margin-top: 1px; }
+.presup-actions { position: absolute; top: 7px; right: 7px; display: flex; gap: 3px; }
+.presup-action-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text3); border-radius: 4px; width: 18px; height: 18px; font-size: 10px; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; }
+.presup-action-btn:active { color: var(--text); background: var(--surface2); }
+/* tx list inside edit modal */
+.tx-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tx-row:last-child { border-bottom: none; }
+.tx-info { flex: 1; }
+.tx-amount { font-size: 14px; font-weight: 600; }
+.tx-note { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.tx-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-tx-edit { background: rgba(99,102,241,0.15); border: 1px solid var(--accent); color: var(--accent); border-radius: 5px; padding: 4px 8px; font-size: 11px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-tx-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; padding: 0 2px; line-height: 1; }
+.btn-tx-del:active { color: var(--red); }
+/* income manager list */
+.inc-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.inc-row:last-child { border-bottom: none; }
+.inc-name { font-size: 14px; font-weight: 500; }
+.inc-date { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.inc-amount { font-size: 15px; font-weight: 700; color: var(--green); }
+.inc-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; padding: 0 4px; }
+.inc-del:active { color: var(--red); }
+.mgr-add-section { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px; }
+/* MOBILE */
+button, .clickable, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+input, select { font-size: 16px; }
+.presup-card { -webkit-user-select: none; user-select: none; }
+/* DRAG REORDER */
+.presup-card.dragging { opacity: 0.25; }
+.presup-card.drag-over { outline: 2px dashed var(--accent); outline-offset: -3px; }
+.drag-ghost { position: fixed; pointer-events: none; z-index: 999; border-radius: var(--radius); border-top-width: 3px; border-top-style: solid; border-color: var(--accent); background: var(--surface); box-shadow: 0 20px 60px rgba(0,0,0,0.65); transform: scale(1.06) rotate(2deg); will-change: left,top; }
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN (shown on first launch) -->
+<div id="setup-screen" class="screen active" style="padding-bottom: 40px;">
+  <div class="setup-hero">
+    <h1>Financial<br><span>Clarity</span></h1>
+    <p>Tu asistente de finanzas personales.<br>Configúralo una vez, úsalo siempre.</p>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">¿Cómo te llamas?</label>
+    <input class="form-input" type="text" id="setup-name" placeholder="Tu nombre" autocomplete="off">
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">¿Cómo manejas tus períodos?</label>
+    <div class="pill-group" id="period-type-group">
+      <button class="pill selected" data-val="mensual">Mensual</button>
+      <button class="pill" data-val="quincenal">Quincenal</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">Moneda principal</label>
+    <div class="pill-group" id="currency-group">
+      <button class="pill selected" data-val="MXN">MXN — pesos</button>
+      <button class="pill" data-val="USD">USD — dólares</button>
+      <button class="pill" data-val="ambas">Ambas</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">¿Cuánto quieres ahorrar este período?</label>
+    <input class="form-input" type="number" id="setup-savings-goal" placeholder="Ej. 3000" inputmode="decimal">
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">Categorías de gasto (puedes editarlas después)</label>
+    <div class="pill-group" id="cat-group">
+      <button class="pill selected" data-val="Comida">🍽 Comida</button>
+      <button class="pill selected" data-val="Gasolina">⛽ Gasolina</button>
+      <button class="pill selected" data-val="Salidas">🎉 Salidas</button>
+      <button class="pill selected" data-val="Salud">💊 Salud</button>
+      <button class="pill selected" data-val="Ropa">👕 Ropa</button>
+      <button class="pill selected" data-val="Hogar">🏠 Hogar</button>
+      <button class="pill" data-val="Mascota">🐾 Mascota</button>
+      <button class="pill" data-val="Negocio">💼 Negocio</button>
+      <button class="pill" data-val="Transporte">🚗 Transporte</button>
+      <button class="pill" data-val="Educación">📚 Educación</button>
+      <button class="pill" data-val="Entretenimiento">🎮 Entretenimiento</button>
+      <button class="pill" data-val="Otro">📦 Otro</button>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="completeSetup()">Comenzar →</button>
+</div>
+
+<!-- NAV (hidden until setup done) -->
+<div class="nav" id="main-nav" style="display:none">
+  <div class="nav-logo">Financial<span>Clarity</span></div>
+  <div class="nav-user" id="nav-user-name"></div>
+</div>
+
+<!-- HOME SCREEN -->
+<div id="home-screen" class="screen">
+  <div class="home-header">
+    <h2 id="greeting-text">Hola 👋</h2>
+    <button class="btn-add-circle" onclick="openModal('presup-add-modal')" title="Nuevo presupuesto">+</button>
+  </div>
+
+  <div class="period-bar">
+    <div class="period-nav-row">
+      <button class="period-nav-btn" onclick="changePeriod(-1)">‹</button>
+      <button class="period-label-btn" id="period-display-home" onclick="openPeriodPicker()">— ▾</button>
+      <button class="period-nav-btn" onclick="changePeriod(1)">›</button>
+    </div>
+    <div class="indicators-row">
+      <div class="indicator-box clickable" onclick="openIncomeManager()">
+        <div class="ind-label" data-i18n="indAvailable">Disponible ＋</div>
+        <div class="ind-val" id="ind-disponible" style="color:var(--green)">$0</div>
+        <div class="ind-sub" id="ind-disponible-sub">toca para ingresos</div>
+      </div>
+      <div class="indicator-box">
+        <div class="ind-label" data-i18n="indSpending">Gasto</div>
+        <div class="ind-val" id="ind-gasto" style="color:var(--red)">$0</div>
+        <div class="ind-sub" id="ind-gasto-sub">de $0</div>
+      </div>
+      <div class="indicator-box clickable" onclick="openSavingsGoalEditor()">
+        <div class="ind-label" data-i18n="indSavings">Ahorro ✎</div>
+        <div class="ind-val" id="ind-ahorro" style="color:var(--accent)">$0</div>
+        <div class="ind-sub" id="ind-ahorro-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="presup-grid" class="presup-grid"></div>
+
+  <div id="presup-empty" class="empty" style="display:none">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Toca "+" para crear tu primer presupuesto
+  </div>
+</div>
+
+<!-- ANALYTICS SCREEN -->
+<div id="analytics-screen" class="screen">
+  <div class="section-header" style="margin-bottom:20px">
+    <span class="section-title" style="font-size:20px; font-weight:700">Análisis</span>
+  </div>
+
+  <!-- Savings -->
+  <div class="card">
+    <div class="section-header" style="margin-bottom:12px">
+      <span class="section-title">Meta de ahorro</span>
+    </div>
+    <div id="savings-display">
+      <div class="empty">Configura tu meta de ahorro en ajustes.</div>
+    </div>
+  </div>
+
+  <!-- Pie chart -->
+  <div class="card">
+    <div class="section-header" style="margin-bottom:12px">
+      <span class="section-title">Distribución de gastos</span>
+    </div>
+    <div id="pie-display"><div class="empty">Sin gastos para analizar.</div></div>
+  </div>
+
+  <!-- Monthly comparison -->
+  <div class="card">
+    <div class="section-header" style="margin-bottom:12px">
+      <span class="section-title">Historial de períodos</span>
+    </div>
+    <div id="history-list"><div class="empty">El historial aparecerá aquí.</div></div>
+  </div>
+</div>
+
+<!-- SETTINGS SCREEN -->
+<div id="settings-screen" class="screen">
+  <div class="section-header" style="margin-bottom:20px">
+    <span class="section-title" style="font-size:20px; font-weight:700">Ajustes</span>
+  </div>
+  <div class="card">
+    <div class="settings-row" onclick="openModal('edit-name-modal')">
+      <span class="settings-label">Nombre</span>
+      <span class="settings-value" id="settings-name-val">— <span style="font-size:16px">›</span></span>
+    </div>
+    <div class="settings-row" onclick="openModal('edit-period-modal')">
+      <span class="settings-label">Tipo de período</span>
+      <span class="settings-value" id="settings-period-val">— <span style="font-size:16px">›</span></span>
+    </div>
+    <div class="settings-row" onclick="openModal('edit-currency-modal')">
+      <span class="settings-label">Moneda</span>
+      <span class="settings-value" id="settings-currency-val">— <span style="font-size:16px">›</span></span>
+    </div>
+    <div class="settings-row" onclick="openModal('edit-savings-modal')">
+      <span class="settings-label" data-i18n="savingsGoal">Meta de ahorro</span>
+      <span class="settings-value" id="settings-savings-val">— <span style="font-size:16px">›</span></span>
+    </div>
+    <div class="settings-row" onclick="toggleLang()">
+      <span class="settings-label" data-i18n="language">Idioma</span>
+      <span class="settings-value" id="settings-lang-val">Español <span style="font-size:16px">›</span></span>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <button class="btn-secondary" style="width:100%; border-radius:var(--radius)" onclick="exportData()">Exportar datos (JSON)</button>
+  </div>
+  <div style="margin-top:10px">
+    <button class="btn-danger" style="width:100%; border-radius:var(--radius)" onclick="if(confirm('¿Resetear todo? Esta acción no se puede deshacer.')) resetApp()">Resetear app</button>
+  </div>
+</div>
+
+<!-- BOTTOM TAB BAR -->
+<div class="tabbar" id="main-tabbar" style="display:none">
+  <button class="tab-btn active" onclick="showScreen('home')" id="tab-home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span data-i18n="tabHome">Inicio</span>
+  </button>
+  <button class="tab-btn" onclick="showScreen('analytics')" id="tab-analytics">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span data-i18n="tabAnalytics">Análisis</span>
+  </button>
+  <button class="tab-btn" onclick="showScreen('settings')" id="tab-settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span data-i18n="tabSettings">Ajustes</span>
+  </button>
+</div>
+
+<!-- MODALS -->
+
+<!-- ADD INCOME -->
+<div class="modal-overlay" id="income-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Registrar ingreso</div>
+    <div class="form-row"><label>Descripción</label><input type="text" id="inc-name" placeholder="Ej. Sueldo, Freelance, Cobro"></div>
+    <div class="form-row"><label>Monto</label><input type="number" id="inc-amount" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Moneda</label><select id="inc-currency"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
+    <div class="form-row"><label>Fecha</label><input type="date" id="inc-date"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('income-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="addIncome()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD BUDGET -->
+<div class="modal-overlay" id="budget-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo presupuesto</div>
+    <div class="form-row"><label>Categoría</label><select id="bud-cat"></select></div>
+    <div class="form-row"><label>Límite del período</label><input type="number" id="bud-limit" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Moneda</label><select id="bud-currency"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('budget-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="addBudget()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERIOD PICKER -->
+<div class="modal-overlay" id="period-picker-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Seleccionar período</div>
+
+    <div class="form-row" id="picker-month-row">
+      <label>Mes</label>
+      <select id="picker-month">
+        <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+        <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+        <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+      </select>
+    </div>
+    <div class="form-row" id="picker-year-row">
+      <label>Año</label>
+      <select id="picker-year"></select>
+    </div>
+    <div class="form-row" id="picker-quincena-row" style="display:none">
+      <label>Quincena</label>
+      <select id="picker-quincena">
+        <option value="1">1ª quincena (días 1–15)</option>
+        <option value="2">2ª quincena (días 16–31)</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('period-picker-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="applyPeriodPick()">Ir a este período</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRESUPUESTO -->
+<div class="modal-overlay" id="presup-add-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo presupuesto</div>
+    <div class="form-row"><label>Nombre del presupuesto</label><input type="text" id="presup-name-input" placeholder="Ej. Despensa, Gasolina, Salidas" autocomplete="off"></div>
+    <div class="form-row"><label>Límite</label><input type="number" id="presup-limit-input" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Moneda</label><select id="presup-currency-input"><option value="MXN">MXN — pesos</option><option value="USD">USD — dólares</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('presup-add-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="addPresupuesto()">Crear</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOG GASTO A PRESUPUESTO -->
+<div class="modal-overlay" id="presup-gasto-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="presup-gasto-modal-title">Registrar gasto</div>
+    <div class="form-row"><label>Monto</label><input type="number" id="presup-gasto-amount" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Nota (opcional)</label><input type="text" id="presup-gasto-note" placeholder="¿En qué lo gastaste?" autocomplete="off"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('presup-gasto-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="addGastoPresupuesto()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PRESUPUESTO -->
+<div class="modal-overlay" id="presup-edit-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="presup-edit-title">Editar presupuesto</div>
+    <div class="form-row"><label>Nombre</label><input type="text" id="edit-presup-name" autocomplete="off"></div>
+    <div class="form-row"><label>Límite (0 = sin límite)</label><input type="number" id="edit-presup-limit" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Moneda</label><select id="edit-presup-currency"><option value="MXN">MXN — pesos</option><option value="USD">USD — dólares</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('presup-edit-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveEditPresupuesto()">Guardar</button>
+    </div>
+    <div style="margin-top:20px">
+      <div style="font-size:12px; font-weight:600; color:var(--text2); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.05em;">Gastos de este período</div>
+      <div id="edit-presup-txs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT TRANSACTION -->
+<div class="modal-overlay" id="tx-edit-modal" style="z-index:210">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Editar gasto</div>
+    <div class="form-row"><label>Monto</label><input type="number" id="tx-edit-amount" placeholder="0.00" inputmode="decimal"></div>
+    <div class="form-row"><label>Nota</label><input type="text" id="tx-edit-note" autocomplete="off"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('tx-edit-modal');openEditPresupuesto(activeEditPresupuestoId)">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveEditTransaction()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- INCOME MANAGER -->
+<div class="modal-overlay" id="income-manager-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="income-mgr-title">Ingresos del período</div>
+    <div id="income-manager-list" style="max-height:40vh; overflow-y:auto;"></div>
+    <div class="mgr-add-section">
+      <div style="font-size:12px; font-weight:600; color:var(--text2); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.05em;">Agregar ingreso</div>
+      <div class="form-row"><label>Descripción</label><input type="text" id="mgr-inc-name" placeholder="Sueldo, Freelance, Renta..." autocomplete="off"></div>
+      <div class="form-row"><label>Monto</label><input type="number" id="mgr-inc-amount" placeholder="0.00" inputmode="decimal"></div>
+      <div class="form-row"><label>Moneda</label><select id="mgr-inc-currency"><option value="MXN">MXN — pesos</option><option value="USD">USD — dólares</option></select></div>
+      <button class="btn-primary" onclick="addIncomeFromManager()">+ Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT SAVINGS GOAL (from home indicator) -->
+<div class="modal-overlay" id="savings-goal-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Meta de ahorro</div>
+    <div class="form-row"><label>Monto de tu meta</label><input type="number" id="savings-goal-input" placeholder="0.00" inputmode="decimal"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('savings-goal-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveSavingsGoalQuick()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT NAME -->
+<div class="modal-overlay" id="edit-name-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Cambiar nombre</div>
+    <div class="form-row"><label>Nombre</label><input type="text" id="edit-name-input"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit-name-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveSetting('name','edit-name-input')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PERIOD -->
+<div class="modal-overlay" id="edit-period-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Tipo de período</div>
+    <div class="pill-group" id="edit-period-pills" style="margin-bottom:20px">
+      <button class="pill" data-val="mensual">Mensual</button>
+      <button class="pill" data-val="quincenal">Quincenal</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit-period-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="savePeriodSetting()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CURRENCY -->
+<div class="modal-overlay" id="edit-currency-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Moneda</div>
+    <div class="pill-group" id="edit-currency-pills" style="margin-bottom:20px">
+      <button class="pill" data-val="MXN">MXN</button>
+      <button class="pill" data-val="USD">USD</button>
+      <button class="pill" data-val="ambas">Ambas</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit-currency-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveCurrencySetting()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT SAVINGS -->
+<div class="modal-overlay" id="edit-savings-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Meta de ahorro</div>
+    <div class="form-row"><label>Meta por período</label><input type="number" id="edit-savings-input" inputmode="decimal"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit-savings-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveSetting('savingsGoal','edit-savings-input')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CATEGORIES -->
+<div class="modal-overlay" id="edit-cats-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Categorías activas</div>
+    <div class="pill-group" id="edit-cats-pills" style="margin-bottom:20px"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit-cats-modal')">Cancelar</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveCatsSetting()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── I18N ── */
+const I18N = {
+  es: {
+    tabHome:'Inicio', tabAnalytics:'Análisis', tabSettings:'Ajustes',
+    indAvailable:'Disponible ＋', indSpending:'Gasto', indSavings:'Ahorro ✎',
+    tapIncome:'toca para ingresos', of:'de', goal:'meta',
+    language:'Idioma', langVal:'Español',
+    savingsGoal:'Meta de ahorro',
+    cardAvailable:'disponible', cardExceeded:'excedido ⚠️', cardSpent:'gastado', noLimit:'Sin límite',
+    hi:'Hola',
+    noExpensesPeriod:'Sin gastos este período', noIncomePeriod:'Sin ingresos este período',
+    incomesTitle:'Ingresos', addIncome:'Agregar ingreso',
+    months:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    q1:'1ª quincena', q2:'2ª quincena',
+  },
+  en: {
+    tabHome:'Home', tabAnalytics:'Analytics', tabSettings:'Settings',
+    indAvailable:'Available ＋', indSpending:'Spending', indSavings:'Savings ✎',
+    tapIncome:'tap for income', of:'of', goal:'goal',
+    language:'Language', langVal:'English',
+    savingsGoal:'Savings goal',
+    cardAvailable:'available', cardExceeded:'exceeded ⚠️', cardSpent:'spent', noLimit:'No limit',
+    hi:'Hello',
+    noExpensesPeriod:'No expenses this period', noIncomePeriod:'No income this period',
+    incomesTitle:'Income', addIncome:'Add income',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    q1:'1st half', q2:'2nd half',
+  }
+};
+
+function t(key) { return (I18N[state.lang] || I18N.es)[key] ?? key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.documentElement.lang = state.lang || 'es';
+}
+
+function toggleLang() {
+  state.lang = state.lang === 'en' ? 'es' : 'en';
+  saveState();
+  applyLang();
+  updateSettingsDisplay();
+  renderHome();
+  showToast(state.lang === 'en' ? 'Language: English ✓' : 'Idioma: Español ✓');
+}
+
+const ALL_CATS = [
+  {val:'Comida',e:'🍽'},{val:'Gasolina',e:'⛽'},{val:'Salidas',e:'🎉'},
+  {val:'Salud',e:'💊'},{val:'Ropa',e:'👕'},{val:'Hogar',e:'🏠'},
+  {val:'Mascota',e:'🐾'},{val:'Negocio',e:'💼'},{val:'Transporte',e:'🚗'},
+  {val:'Educación',e:'📚'},{val:'Entretenimiento',e:'🎮'},{val:'Otro',e:'📦'}
+];
+
+let state = {
+  setup: false,
+  name: '',
+  lang: 'es',
+  periodType: 'mensual',
+  currency: 'MXN',
+  savingsGoal: 0,
+  categories: ['Comida','Gasolina','Salidas','Salud','Ropa','Hogar'],
+  currentPeriodOffset: 0,
+  expenses: [],
+  income: [],
+  budgets: [],
+  recurring: [],
+  presupuestos: []
+};
+
+function loadState() {
+  const s = localStorage.getItem('fc_state');
+  if (s) {
+    try {
+      state = JSON.parse(s);
+      if (!state.presupuestos) state.presupuestos = [];
+      if (!state.lang) state.lang = 'es';
+      // Migrar flag deleted global → deletedFromPeriodKey
+      state.presupuestos.forEach(p => {
+        if (p.deleted && !p.deletedFromPeriodKey) {
+          p.deletedFromPeriodKey = getPeriodKey(0);
+          delete p.deleted;
+        }
+      });
+      // Migrar transacciones sin período al período actual
+      const currentKey = getPeriodKey(0);
+      state.presupuestos.forEach(p => {
+        p.transactions.forEach(t => { if (!t.period) t.period = currentKey; });
+      });
+      // Cargar predeterminados si el usuario ya hizo setup pero no tiene presupuestos
+      if (state.setup && state.presupuestos.length === 0) {
+        state.presupuestos = buildDefaultPresupuestos(state.currency || 'MXN');
+        saveState();
+      }
+    } catch(e) {}
+  }
+}
+
+function saveState() {
+  localStorage.setItem('fc_state', JSON.stringify(state));
+}
+
+function getPeriodKey(offset = 0) {
+  const now = new Date();
+  if (state.periodType === 'mensual') {
+    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  } else {
+    const totalQuincenas = Math.floor((now.getFullYear() * 24) + (now.getMonth() * 2) + (now.getDate() >= 16 ? 1 : 0)) + offset;
+    return `Q${totalQuincenas}`;
+  }
+}
+
+function comparePeriodKeys(a, b) {
+  if (a[0] === 'Q') return parseInt(a.slice(1)) - parseInt(b.slice(1));
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function isVisibleInPeriod(p, periodKey) {
+  // No mostrar en períodos anteriores a la creación del presupuesto
+  if (p.createdAtPeriodKey && comparePeriodKeys(periodKey, p.createdAtPeriodKey) < 0) return false;
+  // No mostrar en el período de borrado ni en los siguientes
+  if (p.deletedFromPeriodKey && comparePeriodKeys(periodKey, p.deletedFromPeriodKey) >= 0) return false;
+  return true;
+}
+
+function getPeriodLabel(offset = 0) {
+  const now = new Date();
+  const months = (I18N[state.lang] || I18N.es).months;
+  if (state.periodType === 'mensual') {
+    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    return `${months[d.getMonth()]} ${d.getFullYear()}`;
+  } else if (state.periodType === 'quincenal') {
+    const quincena = (now.getDate() >= 16 ? 2 : 1);
+    const base = new Date(now.getFullYear(), now.getMonth() + Math.floor(offset / 2), 1);
+    const q = ((quincena - 1 + offset) % 2 + 2) % 2 + 1;
+    return `${q}ª quincena de ${months[base.getMonth()]} ${base.getFullYear()}`;
+  }
+}
+
+function getCurrentPeriodExpenses() {
+  const key = getPeriodKey(state.currentPeriodOffset);
+  return state.expenses.filter(e => e.period === key);
+}
+
+function getCurrentPeriodIncome() {
+  const key = getPeriodKey(state.currentPeriodOffset);
+  return state.income.filter(i => i.period === key);
+}
+
+function fmt(n, cur) {
+  const c = cur || state.currency;
+  const sym = c === 'USD' ? 'US$' : '$';
+  return `${sym}${Number(n).toLocaleString('es-MX', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
+}
+
+function catEmoji(name) {
+  const c = ALL_CATS.find(c => c.val === name);
+  return c ? c.e : '📦';
+}
+
+function barColor(pct) {
+  if (pct >= 1) return '#EF4444';
+  if (pct >= 0.8) return '#F59E0B';
+  return '#22C55E';
+}
+
+function dotColor(pct) {
+  if (pct >= 1) return '#EF4444';
+  if (pct >= 0.8) return '#F59E0B';
+  return '#22C55E';
+}
+
+// SETUP
+document.querySelectorAll('#period-type-group .pill').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#period-type-group .pill').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+  });
+});
+document.querySelectorAll('#currency-group .pill').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#currency-group .pill').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+  });
+});
+document.querySelectorAll('#cat-group .pill').forEach(b => {
+  b.addEventListener('click', () => b.classList.toggle('selected'));
+});
+
+const DEFAULT_PRESUPUESTO_NAMES = [
+  'Gasolina','Teléfono','Internet','Servicios','Servicio de limpieza',
+  'Autopista','Alimento','Mascota','Higiene Personal','Salud',
+  'Salidas','Artículos de Belleza','Inversión','Otros'
+];
+
+function buildDefaultPresupuestos(currency) {
+  const cur = currency === 'ambas' ? 'MXN' : currency;
+  const createdAtPeriodKey = getPeriodKey(0);
+  return DEFAULT_PRESUPUESTO_NAMES.map(name => ({ id: uid(), name, limit: 0, currency: cur, transactions: [], createdAtPeriodKey }));
+}
+
+function completeSetup() {
+  const name = document.getElementById('setup-name').value.trim();
+  if (!name) { showToast('Ingresa tu nombre'); return; }
+  state.name = name;
+  state.periodType = document.querySelector('#period-type-group .pill.selected')?.dataset.val || 'mensual';
+  state.currency = document.querySelector('#currency-group .pill.selected')?.dataset.val || 'MXN';
+  state.savingsGoal = parseFloat(document.getElementById('setup-savings-goal').value) || 0;
+  state.categories = [...document.querySelectorAll('#cat-group .pill.selected')].map(b => b.dataset.val);
+  state.setup = true;
+  state.presupuestos = buildDefaultPresupuestos(state.currency);
+  saveState();
+  initApp();
+}
+
+function initApp() {
+  document.getElementById('setup-screen').classList.remove('active');
+  document.getElementById('main-nav').style.display = '';
+  document.getElementById('main-tabbar').style.display = '';
+  document.getElementById('nav-user-name').textContent = state.name;
+  applyLang();
+  updateSettingsDisplay();
+  showScreen('home');
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`${name}-screen`).classList.add('active');
+  document.getElementById(`tab-${name}`)?.classList.add('active');
+  if (name === 'home') renderHome();
+  if (name === 'analytics') renderAnalytics();
+}
+
+function changePeriod(dir) {
+  state.currentPeriodOffset += dir;
+  saveState();
+  renderHome();
+}
+
+function presupuestoSemaphore(pct) {
+  if (pct >= 1) return 'state-red';
+  if (pct >= 0.8) return 'state-amber';
+  return 'state-green';
+}
+
+function renderHome() {
+  document.getElementById('greeting-text').textContent =
+    state.name ? `${t('hi')}, ${state.name} 👋` : `${t('hi')} 👋`;
+
+  const key = getPeriodKey(state.currentPeriodOffset);
+  const label = getPeriodLabel(state.currentPeriodOffset);
+  document.getElementById('period-display-home').textContent = label + ' ▾';
+
+  const periodIncome = state.income.filter(i => i.period === key).reduce((s, i) => s + Number(i.amount), 0);
+  const periodSpent = state.presupuestos.reduce((total, p) => {
+    return total + p.transactions.filter(t => t.period === key).reduce((s, t) => s + Number(t.amount), 0);
+  }, 0);
+  const activePresupuestos = state.presupuestos.filter(p => isVisibleInPeriod(p, key));
+  const totalLimits = activePresupuestos.reduce((s, p) => s + Number(p.limit), 0);
+  const disponible = periodIncome - periodSpent;
+  const ahorro = periodIncome - periodSpent;
+
+  const elDisp = document.getElementById('ind-disponible');
+  elDisp.textContent = fmt(disponible);
+  elDisp.style.color = disponible < 0 ? 'var(--red)' : 'var(--green)';
+  document.getElementById('ind-disponible-sub').textContent = disponible !== 0 ? '' : t('tapIncome');
+
+  document.getElementById('ind-gasto').textContent = fmt(periodSpent);
+  document.getElementById('ind-gasto-sub').textContent = `${t('of')} ${fmt(totalLimits)}`;
+
+  const elAhorro = document.getElementById('ind-ahorro');
+  elAhorro.textContent = fmt(ahorro);
+  elAhorro.style.color = ahorro < 0 ? 'var(--red)' : ahorro > 0 ? 'var(--accent)' : 'var(--text2)';
+  document.getElementById('ind-ahorro-sub').textContent = state.savingsGoal > 0 ? `${t('goal')} ${fmt(state.savingsGoal)}` : '';
+
+  const grid = document.getElementById('presup-grid');
+  const emptyMsg = document.getElementById('presup-empty');
+
+  if (!activePresupuestos.length) {
+    grid.innerHTML = '';
+    emptyMsg.style.display = '';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  grid.innerHTML = activePresupuestos.map(p => {
+    const spent = p.transactions.filter(t => t.period === key).reduce((s, t) => s + Number(t.amount), 0);
+    const hasLimit = p.limit > 0;
+    const remaining = hasLimit ? p.limit - spent : 0;
+    const pct = hasLimit ? spent / p.limit : 0;
+    const over = hasLimit && spent > p.limit;
+    const sc = hasLimit ? presupuestoSemaphore(pct) : 'state-green';
+    const barPct = Math.min(pct * 100, 100);
+    const barHex = pct >= 1 ? '#EF4444' : pct >= 0.8 ? '#F59E0B' : '#22C55E';
+    const mainVal = hasLimit
+      ? `<div class="presup-remaining ${sc}">${fmt(over ? 0 : remaining, p.currency)}</div>
+         <div class="presup-sub">${over ? `<span style="color:var(--red)">${t('cardExceeded')}</span>` : t('cardAvailable')}</div>`
+      : `<div class="presup-remaining" style="color:var(--text2)">${fmt(spent, p.currency)}</div>
+         <div class="presup-sub">${t('cardSpent')}</div>`;
+    const barRow = hasLimit
+      ? `<div class="presup-sub" style="margin-bottom:4px">${fmt(spent, p.currency)} / ${fmt(p.limit, p.currency)}${over ? ' ⚠️' : ''}</div>
+         <div class="bar-track"><div class="bar-fill" style="width:${barPct}%;background:${barHex}"></div></div>`
+      : `<div class="presup-sub" style="color:var(--text3)">${t('noLimit')}</div>`;
+    return `<div class="presup-card ${sc}" data-presup-id="${p.id}" onclick="openGastoPresupuesto('${p.id}')">
+      <div class="presup-actions">
+        <button class="presup-action-btn" onclick="event.stopPropagation();openEditPresupuesto('${p.id}')" title="Editar">✎</button>
+        <button class="presup-action-btn" onclick="event.stopPropagation();deletePresupuesto('${p.id}')" title="Eliminar">✕</button>
+      </div>
+      <div style="width:100%">
+        <div class="presup-name">${p.name}</div>
+        ${mainVal}
+      </div>
+      <div style="width:100%">${barRow}</div>
+    </div>`;
+  }).join('');
+  initPresupDrag();
+}
+
+function renderAnalytics() {
+  const exps = getCurrentPeriodExpenses();
+  const totalSpent = exps.reduce((s, e) => s + Number(e.amount), 0);
+  const incs = getCurrentPeriodIncome();
+  const totalIncome = incs.reduce((s, i) => s + Number(i.amount), 0);
+
+  // savings
+  const sd = document.getElementById('savings-display');
+  if (state.savingsGoal > 0) {
+    const saved = totalIncome - totalSpent;
+    const pct = Math.min(Math.max(saved / state.savingsGoal, 0), 1);
+    const color = saved >= state.savingsGoal ? '#22C55E' : saved > 0 ? '#F59E0B' : '#EF4444';
+    sd.innerHTML = `
+      <div class="savings-big" style="color:${color}">${fmt(saved)}</div>
+      <div style="font-size:13px;color:var(--text2);margin:4px 0 10px">de ${fmt(state.savingsGoal)} meta</div>
+      <div class="bar-track" style="height:8px">
+        <div class="bar-fill" style="width:${Math.round(pct*100)}%;background:${color}"></div>
+      </div>
+      <div class="savings-numbers"><span>${Math.round(pct*100)}% logrado</span><span>${saved >= state.savingsGoal ? '🎉 ¡Meta cumplida!' : fmt(state.savingsGoal - saved) + ' por ahorrar'}</span></div>`;
+  } else {
+    sd.innerHTML = '<div style="font-size:14px;color:var(--text3)">Configura tu meta en Ajustes.</div>';
+  }
+
+  // pie
+  const pd = document.getElementById('pie-display');
+  if (!exps.length) {
+    pd.innerHTML = '<div class="empty">Sin gastos para analizar.</div>';
+  } else {
+    const bycat = {};
+    exps.forEach(e => { bycat[e.cat] = (bycat[e.cat] || 0) + Number(e.amount); });
+    const colors = ['#6C63FF','#22C55E','#F59E0B','#EF4444','#38BDF8','#F472B6','#A78BFA','#34D399'];
+    const sorted = Object.entries(bycat).sort((a,b) => b[1]-a[1]);
+    const size = 120;
+    const r = 50; const cx = 60; const cy = 60;
+    let angle = -Math.PI/2;
+    let slices = '';
+    sorted.forEach(([cat, amt], i) => {
+      const sweep = (amt / totalSpent) * 2 * Math.PI;
+      const x1 = cx + r * Math.cos(angle);
+      const y1 = cy + r * Math.sin(angle);
+      angle += sweep;
+      const x2 = cx + r * Math.cos(angle);
+      const y2 = cy + r * Math.sin(angle);
+      const large = sweep > Math.PI ? 1 : 0;
+      slices += `<path d="M${cx},${cy} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r},0,${large},1,${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${colors[i % colors.length]}" stroke="#0F1117" stroke-width="2"/>`;
+    });
+    pd.innerHTML = `<div class="pie-container">
+      <svg width="${size}" height="${size}" viewBox="0 0 120 120" style="flex-shrink:0">${slices}</svg>
+      <div class="pie-legend">${sorted.map(([cat,amt],i) => `
+        <div class="legend-item">
+          <span class="legend-dot" style="background:${colors[i%colors.length]}"></span>
+          <span class="legend-label">${catEmoji(cat)} ${cat}</span>
+          <span class="legend-pct">${Math.round(amt/totalSpent*100)}%</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // history
+  const hl = document.getElementById('history-list');
+  const periodKeys = [...new Set(state.expenses.map(e => e.period))].sort().reverse();
+  if (!periodKeys.length) {
+    hl.innerHTML = '<div class="empty">El historial aparecerá aquí.</div>';
+  } else {
+    hl.innerHTML = periodKeys.map(key => {
+      const pe = state.expenses.filter(e => e.period === key);
+      const pi = state.income.filter(i => i.period === key);
+      const tot = pe.reduce((s,e) => s + Number(e.amount), 0);
+      const inc = pi.reduce((s,i) => s + Number(i.amount), 0);
+      return `<div class="history-month">
+        <div class="history-month-header">
+          <div>
+            <div class="history-month-name">${key}</div>
+            <div class="history-month-sub">${pe.length} gastos · Ingresos: ${fmt(inc)}</div>
+          </div>
+          <div class="history-month-total">-${fmt(tot)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function populateCatSelects() {
+  const cats = state.categories;
+  ['exp-cat','bud-cat','rec-cat'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel) sel.innerHTML = cats.map(c => `<option value="${c}">${catEmoji(c)} ${c}</option>`).join('');
+  });
+}
+
+function openModal(id) {
+  populateCatSelects();
+  const today = new Date().toISOString().split('T')[0];
+  if (document.getElementById('exp-date')) document.getElementById('exp-date').value = today;
+  if (document.getElementById('inc-date')) document.getElementById('inc-date').value = today;
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+function uid() { return Math.random().toString(36).slice(2); }
+
+function addIncome() {
+  const name = document.getElementById('inc-name').value.trim();
+  const amount = parseFloat(document.getElementById('inc-amount').value);
+  const currency = document.getElementById('inc-currency').value;
+  const date = document.getElementById('inc-date').value;
+  if (!name || !amount) { showToast('Completa nombre y monto'); return; }
+  state.income.push({ id: uid(), name, amount, currency, date, period: getPeriodKey(state.currentPeriodOffset) });
+  saveState();
+  closeModal('income-modal');
+  document.getElementById('inc-name').value = '';
+  document.getElementById('inc-amount').value = '';
+  showToast('Ingreso guardado ✓');
+  renderHome();
+}
+
+function addBudget() {
+  const cat = document.getElementById('bud-cat').value;
+  const limit = parseFloat(document.getElementById('bud-limit').value);
+  const currency = document.getElementById('bud-currency').value;
+  if (!limit) { showToast('Ingresa un límite'); return; }
+  const existing = state.budgets.findIndex(b => b.cat === cat);
+  if (existing >= 0) state.budgets[existing] = { cat, limit, currency };
+  else state.budgets.push({ cat, limit, currency });
+  saveState();
+  closeModal('budget-modal');
+  document.getElementById('bud-limit').value = '';
+  showToast('Presupuesto guardado ✓');
+  renderHome();
+}
+
+let activePresupuestoId = null;
+
+function addPresupuesto() {
+  const name = document.getElementById('presup-name-input').value.trim();
+  const limit = parseFloat(document.getElementById('presup-limit-input').value);
+  const currency = document.getElementById('presup-currency-input').value;
+  if (!name) { showToast('Ingresa un nombre'); return; }
+  if (!limit || limit <= 0) { showToast('Ingresa un límite válido'); return; }
+  state.presupuestos.push({ id: uid(), name, limit, currency, transactions: [], createdAtPeriodKey: getPeriodKey(state.currentPeriodOffset) });
+  saveState();
+  closeModal('presup-add-modal');
+  document.getElementById('presup-name-input').value = '';
+  document.getElementById('presup-limit-input').value = '';
+  showToast('Presupuesto creado ✓');
+  renderHome();
+}
+
+function openGastoPresupuesto(id) {
+  const p = state.presupuestos.find(x => x.id === id);
+  if (!p) return;
+  activePresupuestoId = id;
+  document.getElementById('presup-gasto-modal-title').textContent = `Registrar gasto · ${p.name}`;
+  document.getElementById('presup-gasto-amount').value = '';
+  document.getElementById('presup-gasto-note').value = '';
+  document.getElementById('presup-gasto-modal').classList.add('open');
+}
+
+function addGastoPresupuesto() {
+  const amount = parseFloat(document.getElementById('presup-gasto-amount').value);
+  const note = document.getElementById('presup-gasto-note').value.trim();
+  if (!amount || amount <= 0) { showToast('Ingresa un monto válido'); return; }
+  const p = state.presupuestos.find(x => x.id === activePresupuestoId);
+  if (!p) return;
+  p.transactions.push({ id: uid(), amount, note, date: new Date().toISOString().split('T')[0], period: getPeriodKey(state.currentPeriodOffset) });
+  saveState();
+  closeModal('presup-gasto-modal');
+  showToast('Gasto registrado ✓');
+  renderHome();
+}
+
+/* ── EDIT PRESUPUESTO ── */
+let activeEditPresupuestoId = null;
+let activeEditTransactionId = null;
+
+function openEditPresupuesto(id) {
+  const p = state.presupuestos.find(x => x.id === id);
+  if (!p) return;
+  activeEditPresupuestoId = id;
+  document.getElementById('presup-edit-title').textContent = p.name;
+  document.getElementById('edit-presup-name').value = p.name;
+  document.getElementById('edit-presup-limit').value = p.limit || '';
+  document.getElementById('edit-presup-currency').value = p.currency;
+  renderEditPresupuestoTxs(p);
+  document.getElementById('presup-edit-modal').classList.add('open');
+}
+
+function renderEditPresupuestoTxs(p) {
+  const key = getPeriodKey(state.currentPeriodOffset);
+  const txs = p.transactions.filter(t => t.period === key);
+  const el = document.getElementById('edit-presup-txs');
+  if (!txs.length) {
+    el.innerHTML = `<div style="font-size:13px;color:var(--text3);text-align:center;padding:8px 0">${t('noExpensesPeriod')}</div>`;
+    return;
+  }
+  el.innerHTML = txs.map(t => `
+    <div class="tx-row">
+      <div class="tx-info">
+        <div class="tx-amount">${fmt(t.amount, p.currency)}</div>
+        ${t.note ? `<div class="tx-note">${t.note}</div>` : ''}
+        <div class="tx-note">${t.date}</div>
+      </div>
+      <div class="tx-btns">
+        <button class="btn-tx-edit" onclick="openEditTransaction('${p.id}','${t.id}')">editar</button>
+        <button class="btn-tx-del" onclick="deleteTransaction('${p.id}','${t.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function saveEditPresupuesto() {
+  const p = state.presupuestos.find(x => x.id === activeEditPresupuestoId);
+  if (!p) return;
+  const name = document.getElementById('edit-presup-name').value.trim();
+  if (!name) { showToast('Ingresa un nombre'); return; }
+  p.name = name;
+  p.limit = parseFloat(document.getElementById('edit-presup-limit').value) || 0;
+  p.currency = document.getElementById('edit-presup-currency').value;
+  saveState();
+  closeModal('presup-edit-modal');
+  showToast('Presupuesto actualizado ✓');
+  renderHome();
+}
+
+function openEditTransaction(presupuestoId, txId) {
+  closeModal('presup-edit-modal');
+  activeEditPresupuestoId = presupuestoId;
+  activeEditTransactionId = txId;
+  const p = state.presupuestos.find(x => x.id === presupuestoId);
+  const tx = p && p.transactions.find(t => t.id === txId);
+  if (!tx) return;
+  document.getElementById('tx-edit-amount').value = tx.amount;
+  document.getElementById('tx-edit-note').value = tx.note || '';
+  document.getElementById('tx-edit-modal').classList.add('open');
+}
+
+function saveEditTransaction() {
+  const amount = parseFloat(document.getElementById('tx-edit-amount').value);
+  const note = document.getElementById('tx-edit-note').value.trim();
+  if (!amount || amount <= 0) { showToast('Ingresa un monto válido'); return; }
+  const p = state.presupuestos.find(x => x.id === activeEditPresupuestoId);
+  const tx = p && p.transactions.find(t => t.id === activeEditTransactionId);
+  if (!tx) return;
+  tx.amount = amount;
+  tx.note = note;
+  saveState();
+  closeModal('tx-edit-modal');
+  showToast('Gasto actualizado ✓');
+  renderHome();
+  openEditPresupuesto(activeEditPresupuestoId);
+}
+
+function deleteTransaction(presupuestoId, txId) {
+  const p = state.presupuestos.find(x => x.id === presupuestoId);
+  if (!p) return;
+  p.transactions = p.transactions.filter(t => t.id !== txId);
+  saveState();
+  showToast('Gasto eliminado');
+  renderEditPresupuestoTxs(p);
+  renderHome();
+}
+
+/* ── INCOME MANAGER ── */
+function openIncomeManager() {
+  const key = getPeriodKey(state.currentPeriodOffset);
+  document.getElementById('income-mgr-title').textContent = `${t('incomesTitle')} · ${getPeriodLabel(state.currentPeriodOffset)}`;
+  renderIncomeManager();
+  document.getElementById('income-manager-modal').classList.add('open');
+}
+
+function renderIncomeManager() {
+  const key = getPeriodKey(state.currentPeriodOffset);
+  const incomes = state.income.filter(i => i.period === key);
+  const el = document.getElementById('income-manager-list');
+  if (!incomes.length) {
+    el.innerHTML = `<div style="font-size:13px;color:var(--text3);text-align:center;padding:12px 0">${t('noIncomePeriod')}</div>`;
+    return;
+  }
+  el.innerHTML = incomes.map(i => `
+    <div class="inc-row">
+      <div>
+        <div class="inc-name">${i.name}</div>
+        <div class="inc-date">${i.date}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="inc-amount">+${fmt(i.amount, i.currency)}</div>
+        <button class="inc-del" onclick="deleteIncomeItem('${i.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function addIncomeFromManager() {
+  const name = document.getElementById('mgr-inc-name').value.trim();
+  const amount = parseFloat(document.getElementById('mgr-inc-amount').value);
+  const currency = document.getElementById('mgr-inc-currency').value;
+  if (!name || !amount || amount <= 0) { showToast('Completa descripción y monto'); return; }
+  const today = new Date().toISOString().split('T')[0];
+  state.income.push({ id: uid(), name, amount, currency, date: today, period: getPeriodKey(state.currentPeriodOffset) });
+  saveState();
+  document.getElementById('mgr-inc-name').value = '';
+  document.getElementById('mgr-inc-amount').value = '';
+  showToast('Ingreso agregado ✓');
+  renderIncomeManager();
+  renderHome();
+}
+
+function deleteIncomeItem(id) {
+  state.income = state.income.filter(i => i.id !== id);
+  saveState();
+  showToast('Ingreso eliminado');
+  renderIncomeManager();
+  renderHome();
+}
+
+function openPeriodPicker() {
+  const now = new Date();
+  // Populate years
+  const yearSel = document.getElementById('picker-year');
+  yearSel.innerHTML = '';
+  for (let y = now.getFullYear() - 4; y <= now.getFullYear() + 2; y++) {
+    yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  const isQuincenal = state.periodType === 'quincenal';
+  document.getElementById('picker-quincena-row').style.display = isQuincenal ? '' : 'none';
+  if (state.periodType === 'mensual') {
+      const d = new Date(now.getFullYear(), now.getMonth() + state.currentPeriodOffset, 1);
+      document.getElementById('picker-month').value = d.getMonth() + 1;
+      document.getElementById('picker-year').value = d.getFullYear();
+    } else if (isQuincenal) {
+      const currentQ = Math.floor(now.getFullYear() * 24 + now.getMonth() * 2 + (now.getDate() >= 16 ? 1 : 0)) + state.currentPeriodOffset;
+      const qYear = Math.floor(currentQ / 24);
+      const qMonth = Math.floor((currentQ % 24) / 2) + 1;
+      const qNum = (currentQ % 2) + 1;
+      document.getElementById('picker-month').value = qMonth;
+      document.getElementById('picker-year').value = qYear;
+      document.getElementById('picker-quincena').value = qNum;
+    }
+  document.getElementById('period-picker-modal').classList.add('open');
+}
+
+function applyPeriodPick() {
+  const now = new Date();
+  if (state.periodType === 'mensual') {
+    const month = parseInt(document.getElementById('picker-month').value);
+    const year = parseInt(document.getElementById('picker-year').value);
+    state.currentPeriodOffset = (year - now.getFullYear()) * 12 + (month - 1 - now.getMonth());
+  } else if (state.periodType === 'quincenal') {
+    const month = parseInt(document.getElementById('picker-month').value);
+    const year = parseInt(document.getElementById('picker-year').value);
+    const q = parseInt(document.getElementById('picker-quincena').value);
+    const currentQ = Math.floor(now.getFullYear() * 24 + now.getMonth() * 2 + (now.getDate() >= 16 ? 1 : 0));
+    const selectedQ = year * 24 + (month - 1) * 2 + (q - 1);
+    state.currentPeriodOffset = selectedQ - currentQ;
+  }
+  saveState();
+  closeModal('period-picker-modal');
+  renderHome();
+}
+
+/* ── DRAG TO REORDER CARDS ── */
+let dragInfo = null;
+
+function initPresupDrag() {
+  document.querySelectorAll('#presup-grid .presup-card').forEach((card, idx) => {
+    let pressTimer = null;
+
+    card.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => {
+        pressTimer = null;
+        beginDrag(card, idx, e.touches[0]);
+      }, 430);
+    }, { passive: true });
+
+    const cancelPress = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+    card.addEventListener('touchend', cancelPress);
+    card.addEventListener('touchcancel', cancelPress);
+    card.addEventListener('touchmove', cancelPress, { passive: true });
+  });
+}
+
+function beginDrag(card, idx, touch) {
+  if (navigator.vibrate) navigator.vibrate(35);
+  const rect = card.getBoundingClientRect();
+  const ghost = card.cloneNode(true);
+  ghost.className = 'drag-ghost';
+  // Copy the state color class
+  const stateClass = [...card.classList].find(c => c.startsWith('state-'));
+  if (stateClass) ghost.classList.add(stateClass);
+  ghost.style.width = rect.width + 'px';
+  ghost.style.height = rect.height + 'px';
+  ghost.style.left = rect.left + 'px';
+  ghost.style.top = rect.top + 'px';
+  document.body.appendChild(ghost);
+  card.classList.add('dragging');
+
+  dragInfo = {
+    srcIdx: idx,
+    targetId: null,
+    ghost, card,
+    offsetX: touch.clientX - rect.left,
+    offsetY: touch.clientY - rect.top,
+  };
+
+  document.addEventListener('touchmove', handleDragMove, { passive: false });
+  document.addEventListener('touchend', handleDragEnd, { once: true });
+  document.addEventListener('touchcancel', handleDragEnd, { once: true });
+}
+
+function handleDragMove(e) {
+  if (!dragInfo) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  dragInfo.ghost.style.left = (touch.clientX - dragInfo.offsetX) + 'px';
+  dragInfo.ghost.style.top  = (touch.clientY - dragInfo.offsetY) + 'px';
+
+  // Find target card under finger
+  dragInfo.ghost.style.visibility = 'hidden';
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  dragInfo.ghost.style.visibility = '';
+
+  document.querySelectorAll('#presup-grid .presup-card').forEach(c => c.classList.remove('drag-over'));
+  const target = el?.closest('#presup-grid .presup-card:not(.dragging)');
+  if (target) {
+    dragInfo.targetId = target.dataset.presupId;
+    target.classList.add('drag-over');
+  } else {
+    dragInfo.targetId = null;
+  }
+}
+
+function handleDragEnd() {
+  document.removeEventListener('touchmove', handleDragMove);
+  if (!dragInfo) return;
+
+  dragInfo.ghost.remove();
+  dragInfo.card.classList.remove('dragging');
+  document.querySelectorAll('#presup-grid .presup-card').forEach(c => c.classList.remove('drag-over'));
+
+  const { srcIdx, targetId } = dragInfo;
+  dragInfo = null;
+
+  if (targetId) {
+    const key = getPeriodKey(state.currentPeriodOffset);
+    const active = state.presupuestos.filter(p => isVisibleInPeriod(p, key));
+    const deleted = state.presupuestos.filter(p => !isVisibleInPeriod(p, key));
+    const tIdx = active.findIndex(p => p.id === targetId);
+    if (tIdx !== -1 && tIdx !== srcIdx) {
+      const [moved] = active.splice(srcIdx, 1);
+      const insertAt = tIdx > srcIdx ? tIdx - 1 : tIdx;
+      active.splice(insertAt, 0, moved);
+      state.presupuestos = [...active, ...deleted];
+      saveState();
+    }
+  }
+  renderHome();
+}
+
+function openSavingsGoalEditor() {
+  document.getElementById('savings-goal-input').value = state.savingsGoal || '';
+  document.getElementById('savings-goal-modal').classList.add('open');
+}
+
+function saveSavingsGoalQuick() {
+  state.savingsGoal = parseFloat(document.getElementById('savings-goal-input').value) || 0;
+  saveState();
+  closeModal('savings-goal-modal');
+  showToast('Meta actualizada ✓');
+  renderHome();
+}
+
+function deletePresupuesto(id) {
+  if (!confirm('¿Eliminar este presupuesto? Los datos históricos se conservan.')) return;
+  const p = state.presupuestos.find(x => x.id === id);
+  if (p) p.deletedFromPeriodKey = getPeriodKey(state.currentPeriodOffset);
+  saveState();
+  showToast('Presupuesto eliminado');
+  renderHome();
+}
+
+function updateSettingsDisplay() {
+  document.getElementById('settings-name-val').innerHTML = `${state.name} <span style="font-size:16px">›</span>`;
+  document.getElementById('settings-period-val').innerHTML = `${state.periodType} <span style="font-size:16px">›</span>`;
+  document.getElementById('settings-currency-val').innerHTML = `${state.currency} <span style="font-size:16px">›</span>`;
+  document.getElementById('settings-savings-val').innerHTML = `${fmt(state.savingsGoal)} <span style="font-size:16px">›</span>`;
+  document.getElementById('settings-lang-val').innerHTML = `${t('langVal')} <span style="font-size:16px">›</span>`;
+}
+
+function saveSetting(key, inputId) {
+  const val = document.getElementById(inputId).value;
+  if (!val) return;
+  state[key] = key === 'savingsGoal' ? parseFloat(val) : val;
+  saveState(); updateSettingsDisplay();
+  closeModal(`edit-${key === 'savingsGoal' ? 'savings' : 'name'}-modal`);
+  showToast('Guardado ✓');
+  if (key === 'name') {
+    document.getElementById('nav-user-name').textContent = state.name;
+    document.getElementById('greeting-text').textContent = `Hola, ${state.name} 👋`;
+  }
+}
+
+// Period pills in modal
+document.querySelectorAll('#edit-period-pills .pill').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#edit-period-pills .pill').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+  });
+});
+document.querySelectorAll('#edit-currency-pills .pill').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#edit-currency-pills .pill').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+  });
+});
+
+function savePeriodSetting() {
+  const sel = document.querySelector('#edit-period-pills .pill.selected');
+  if (!sel) return;
+  state.periodType = sel.dataset.val;
+  saveState(); updateSettingsDisplay();
+  closeModal('edit-period-modal'); showToast('Guardado ✓');
+}
+
+function saveCurrencySetting() {
+  const sel = document.querySelector('#edit-currency-pills .pill.selected');
+  if (!sel) return;
+  state.currency = sel.dataset.val;
+  saveState(); updateSettingsDisplay();
+  closeModal('edit-currency-modal'); showToast('Guardado ✓');
+}
+
+function openEditCats() {
+  const container = document.getElementById('edit-cats-pills');
+  container.innerHTML = ALL_CATS.map(c => `<button type="button" class="pill${state.categories.includes(c.val) ? ' selected':''}" data-val="${c.val}">${c.e} ${c.val}</button>`).join('');
+  container.querySelectorAll('.pill').forEach(b => b.addEventListener('click', () => b.classList.toggle('selected')));
+}
+
+document.querySelector('[onclick="openModal(\'edit-cats-modal\')"]')?.addEventListener('click', openEditCats);
+document.querySelectorAll('.settings-row').forEach(r => {
+  if (r.getAttribute('onclick') === "openModal('edit-cats-modal')") {
+    r.addEventListener('click', openEditCats);
+  }
+});
+
+function saveCatsSetting() {
+  state.categories = [...document.querySelectorAll('#edit-cats-pills .pill.selected')].map(b => b.dataset.val);
+  saveState(); updateSettingsDisplay();
+  closeModal('edit-cats-modal'); showToast('Categorías guardadas ✓');
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'financial-clarity-backup.json';
+  a.click();
+  showToast('Datos exportados ✓');
+}
+
+function resetApp() {
+  localStorage.removeItem('fc_state');
+  location.reload();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// INIT
+loadState();
+if (state.setup) {
+  document.getElementById('setup-screen').classList.remove('active');
+  document.getElementById('main-nav').style.display = '';
+  document.getElementById('main-tabbar').style.display = '';
+  document.getElementById('nav-user-name').textContent = state.name;
+  document.getElementById('greeting-text').textContent = `Hola, ${state.name} 👋`;
+  updateSettingsDisplay();
+  showScreen('home');
+} else {
+  document.getElementById('setup-screen').classList.add('active');
+}
+
+// Fix settings cat click
+document.querySelectorAll('.settings-row').forEach(row => {
+  const oc = row.getAttribute('onclick');
+  if (oc && oc.includes('edit-cats-modal')) {
+    row.onclick = () => { openEditCats(); openModal('edit-cats-modal'); };
+  }
+});
+</script>
+</body>
+</html>
