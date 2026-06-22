@@ -252,12 +252,20 @@ input, select { font-size: 16px; }
   </div>
 
   <div class="form-section">
-    <label class="form-label">¿Cómo te llamas?</label>
+    <label class="form-label" id="setup-label-name">¿Cómo te llamas?</label>
     <input class="form-input" type="text" id="setup-name" placeholder="Tu nombre" autocomplete="off">
   </div>
 
   <div class="form-section">
-    <label class="form-label">¿Cómo manejas tus períodos?</label>
+    <label class="form-label" id="setup-label-lang">Idioma / Language</label>
+    <div class="pill-group" id="setup-lang-group">
+      <button class="pill selected" data-val="es">🇲🇽 Español</button>
+      <button class="pill" data-val="en">🇺🇸 English</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label" id="setup-label-period">¿Cómo manejas tus períodos?</label>
     <div class="pill-group" id="period-type-group">
       <button class="pill selected" data-val="mensual">Mensual</button>
       <button class="pill" data-val="quincenal">Quincenal</button>
@@ -265,7 +273,7 @@ input, select { font-size: 16px; }
   </div>
 
   <div class="form-section">
-    <label class="form-label">Moneda principal</label>
+    <label class="form-label" id="setup-label-currency">Moneda principal</label>
     <div class="pill-group" id="currency-group">
       <button class="pill selected" data-val="MXN">MXN — pesos</button>
       <button class="pill" data-val="USD">USD — dólares</button>
@@ -274,29 +282,11 @@ input, select { font-size: 16px; }
   </div>
 
   <div class="form-section">
-    <label class="form-label">¿Cuánto quieres ahorrar este período?</label>
+    <label class="form-label" id="setup-label-savings">¿Cuánto quieres ahorrar este período?</label>
     <input class="form-input" type="number" id="setup-savings-goal" placeholder="Ej. 3000" inputmode="decimal">
   </div>
 
-  <div class="form-section">
-    <label class="form-label">Categorías de gasto (puedes editarlas después)</label>
-    <div class="pill-group" id="cat-group">
-      <button class="pill selected" data-val="Comida">🍽 Comida</button>
-      <button class="pill selected" data-val="Gasolina">⛽ Gasolina</button>
-      <button class="pill selected" data-val="Salidas">🎉 Salidas</button>
-      <button class="pill selected" data-val="Salud">💊 Salud</button>
-      <button class="pill selected" data-val="Ropa">👕 Ropa</button>
-      <button class="pill selected" data-val="Hogar">🏠 Hogar</button>
-      <button class="pill" data-val="Mascota">🐾 Mascota</button>
-      <button class="pill" data-val="Negocio">💼 Negocio</button>
-      <button class="pill" data-val="Transporte">🚗 Transporte</button>
-      <button class="pill" data-val="Educación">📚 Educación</button>
-      <button class="pill" data-val="Entretenimiento">🎮 Entretenimiento</button>
-      <button class="pill" data-val="Otro">📦 Otro</button>
-    </div>
-  </div>
-
-  <button class="btn-primary" onclick="completeSetup()">Comenzar →</button>
+  <button class="btn-primary" id="setup-btn-start" onclick="completeSetup()">Comenzar →</button>
 </div>
 
 <!-- NAV (hidden until setup done) -->
@@ -345,39 +335,6 @@ input, select { font-size: 16px; }
   </div>
 </div>
 
-<!-- ANALYTICS SCREEN -->
-<div id="analytics-screen" class="screen">
-  <div class="section-header" style="margin-bottom:20px">
-    <span class="section-title" style="font-size:20px; font-weight:700">Análisis</span>
-  </div>
-
-  <!-- Savings -->
-  <div class="card">
-    <div class="section-header" style="margin-bottom:12px">
-      <span class="section-title">Meta de ahorro</span>
-    </div>
-    <div id="savings-display">
-      <div class="empty">Configura tu meta de ahorro en ajustes.</div>
-    </div>
-  </div>
-
-  <!-- Pie chart -->
-  <div class="card">
-    <div class="section-header" style="margin-bottom:12px">
-      <span class="section-title">Distribución de gastos</span>
-    </div>
-    <div id="pie-display"><div class="empty">Sin gastos para analizar.</div></div>
-  </div>
-
-  <!-- Monthly comparison -->
-  <div class="card">
-    <div class="section-header" style="margin-bottom:12px">
-      <span class="section-title">Historial de períodos</span>
-    </div>
-    <div id="history-list"><div class="empty">El historial aparecerá aquí.</div></div>
-  </div>
-</div>
-
 <!-- SETTINGS SCREEN -->
 <div id="settings-screen" class="screen">
   <div class="section-header" style="margin-bottom:20px">
@@ -419,11 +376,7 @@ input, select { font-size: 16px; }
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span data-i18n="tabHome">Inicio</span>
   </button>
-  <button class="tab-btn" onclick="showScreen('analytics')" id="tab-analytics">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span data-i18n="tabAnalytics">Análisis</span>
-  </button>
-  <button class="tab-btn" onclick="showScreen('settings')" id="tab-settings">
+<button class="tab-btn" onclick="showScreen('settings')" id="tab-settings">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
     <span data-i18n="tabSettings">Ajustes</span>
   </button>
@@ -664,7 +617,7 @@ input, select { font-size: 16px; }
 /* ── I18N ── */
 const I18N = {
   es: {
-    tabHome:'Inicio', tabAnalytics:'Análisis', tabSettings:'Ajustes',
+    tabHome:'Inicio', tabSettings:'Ajustes',
     indAvailable:'Disponible ＋', indSpending:'Gasto', indSavings:'Ahorro ✎',
     tapIncome:'toca para ingresos', of:'de', goal:'meta',
     language:'Idioma', langVal:'Español',
@@ -677,7 +630,7 @@ const I18N = {
     q1:'1ª quincena', q2:'2ª quincena',
   },
   en: {
-    tabHome:'Home', tabAnalytics:'Analytics', tabSettings:'Settings',
+    tabHome:'Home', tabSettings:'Settings',
     indAvailable:'Available ＋', indSpending:'Spending', indSavings:'Savings ✎',
     tapIncome:'tap for income', of:'of', goal:'goal',
     language:'Language', langVal:'English',
@@ -692,6 +645,29 @@ const I18N = {
 };
 
 function t(key) { return (I18N[state.lang] || I18N.es)[key] ?? key; }
+
+const SETUP_LABELS = {
+  es: {
+    name: '¿Cómo te llamas?', lang: 'Idioma / Language',
+    period: '¿Cómo manejas tus períodos?', currency: 'Moneda principal',
+    savings: '¿Cuánto quieres ahorrar este período?', btn: 'Comenzar →'
+  },
+  en: {
+    name: "What's your name?", lang: 'Language / Idioma',
+    period: 'How do you manage your periods?', currency: 'Main currency',
+    savings: 'How much do you want to save this period?', btn: 'Get started →'
+  }
+};
+
+function applySetupLang(lang) {
+  const L = SETUP_LABELS[lang] || SETUP_LABELS.es;
+  document.getElementById('setup-label-name').textContent = L.name;
+  document.getElementById('setup-label-lang').textContent = L.lang;
+  document.getElementById('setup-label-period').textContent = L.period;
+  document.getElementById('setup-label-currency').textContent = L.currency;
+  document.getElementById('setup-label-savings').textContent = L.savings;
+  document.getElementById('setup-btn-start').textContent = L.btn;
+}
 
 function applyLang() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -848,8 +824,12 @@ document.querySelectorAll('#currency-group .pill').forEach(b => {
     b.classList.add('selected');
   });
 });
-document.querySelectorAll('#cat-group .pill').forEach(b => {
-  b.addEventListener('click', () => b.classList.toggle('selected'));
+document.querySelectorAll('#setup-lang-group .pill').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#setup-lang-group .pill').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    applySetupLang(b.dataset.val);
+  });
 });
 
 const DEFAULT_PRESUPUESTO_NAMES = [
@@ -871,7 +851,7 @@ function completeSetup() {
   state.periodType = document.querySelector('#period-type-group .pill.selected')?.dataset.val || 'mensual';
   state.currency = document.querySelector('#currency-group .pill.selected')?.dataset.val || 'MXN';
   state.savingsGoal = parseFloat(document.getElementById('setup-savings-goal').value) || 0;
-  state.categories = [...document.querySelectorAll('#cat-group .pill.selected')].map(b => b.dataset.val);
+  state.lang = document.querySelector('#setup-lang-group .pill.selected')?.dataset.val || 'es';
   state.setup = true;
   state.presupuestos = buildDefaultPresupuestos(state.currency);
   saveState();
@@ -894,7 +874,6 @@ function showScreen(name) {
   document.getElementById(`${name}-screen`).classList.add('active');
   document.getElementById(`tab-${name}`)?.classList.add('active');
   if (name === 'home') renderHome();
-  if (name === 'analytics') renderAnalytics();
 }
 
 function changePeriod(dir) {
@@ -982,87 +961,6 @@ function renderHome() {
   initPresupDrag();
 }
 
-function renderAnalytics() {
-  const exps = getCurrentPeriodExpenses();
-  const totalSpent = exps.reduce((s, e) => s + Number(e.amount), 0);
-  const incs = getCurrentPeriodIncome();
-  const totalIncome = incs.reduce((s, i) => s + Number(i.amount), 0);
-
-  // savings
-  const sd = document.getElementById('savings-display');
-  if (state.savingsGoal > 0) {
-    const saved = totalIncome - totalSpent;
-    const pct = Math.min(Math.max(saved / state.savingsGoal, 0), 1);
-    const color = saved >= state.savingsGoal ? '#22C55E' : saved > 0 ? '#F59E0B' : '#EF4444';
-    sd.innerHTML = `
-      <div class="savings-big" style="color:${color}">${fmt(saved)}</div>
-      <div style="font-size:13px;color:var(--text2);margin:4px 0 10px">de ${fmt(state.savingsGoal)} meta</div>
-      <div class="bar-track" style="height:8px">
-        <div class="bar-fill" style="width:${Math.round(pct*100)}%;background:${color}"></div>
-      </div>
-      <div class="savings-numbers"><span>${Math.round(pct*100)}% logrado</span><span>${saved >= state.savingsGoal ? '🎉 ¡Meta cumplida!' : fmt(state.savingsGoal - saved) + ' por ahorrar'}</span></div>`;
-  } else {
-    sd.innerHTML = '<div style="font-size:14px;color:var(--text3)">Configura tu meta en Ajustes.</div>';
-  }
-
-  // pie
-  const pd = document.getElementById('pie-display');
-  if (!exps.length) {
-    pd.innerHTML = '<div class="empty">Sin gastos para analizar.</div>';
-  } else {
-    const bycat = {};
-    exps.forEach(e => { bycat[e.cat] = (bycat[e.cat] || 0) + Number(e.amount); });
-    const colors = ['#6C63FF','#22C55E','#F59E0B','#EF4444','#38BDF8','#F472B6','#A78BFA','#34D399'];
-    const sorted = Object.entries(bycat).sort((a,b) => b[1]-a[1]);
-    const size = 120;
-    const r = 50; const cx = 60; const cy = 60;
-    let angle = -Math.PI/2;
-    let slices = '';
-    sorted.forEach(([cat, amt], i) => {
-      const sweep = (amt / totalSpent) * 2 * Math.PI;
-      const x1 = cx + r * Math.cos(angle);
-      const y1 = cy + r * Math.sin(angle);
-      angle += sweep;
-      const x2 = cx + r * Math.cos(angle);
-      const y2 = cy + r * Math.sin(angle);
-      const large = sweep > Math.PI ? 1 : 0;
-      slices += `<path d="M${cx},${cy} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r},0,${large},1,${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${colors[i % colors.length]}" stroke="#0F1117" stroke-width="2"/>`;
-    });
-    pd.innerHTML = `<div class="pie-container">
-      <svg width="${size}" height="${size}" viewBox="0 0 120 120" style="flex-shrink:0">${slices}</svg>
-      <div class="pie-legend">${sorted.map(([cat,amt],i) => `
-        <div class="legend-item">
-          <span class="legend-dot" style="background:${colors[i%colors.length]}"></span>
-          <span class="legend-label">${catEmoji(cat)} ${cat}</span>
-          <span class="legend-pct">${Math.round(amt/totalSpent*100)}%</span>
-        </div>`).join('')}
-      </div>
-    </div>`;
-  }
-
-  // history
-  const hl = document.getElementById('history-list');
-  const periodKeys = [...new Set(state.expenses.map(e => e.period))].sort().reverse();
-  if (!periodKeys.length) {
-    hl.innerHTML = '<div class="empty">El historial aparecerá aquí.</div>';
-  } else {
-    hl.innerHTML = periodKeys.map(key => {
-      const pe = state.expenses.filter(e => e.period === key);
-      const pi = state.income.filter(i => i.period === key);
-      const tot = pe.reduce((s,e) => s + Number(e.amount), 0);
-      const inc = pi.reduce((s,i) => s + Number(i.amount), 0);
-      return `<div class="history-month">
-        <div class="history-month-header">
-          <div>
-            <div class="history-month-name">${key}</div>
-            <div class="history-month-sub">${pe.length} gastos · Ingresos: ${fmt(inc)}</div>
-          </div>
-          <div class="history-month-total">-${fmt(tot)}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-}
 
 function populateCatSelects() {
   const cats = state.categories;
